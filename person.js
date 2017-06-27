@@ -45,6 +45,8 @@ function vollgeilername(newname) {
   m.appendChild(text);
 
   messagekasten.appendChild(m);
+  
+  document.getElementById("chat").scrollTop += 100;
 }
 
 function receiveMsg(data) {
@@ -76,6 +78,8 @@ function receiveMsg(data) {
 
   messagekasten.appendChild(n);
   messagekasten.appendChild(m);
+  
+  document.getElementById("chat").scrollTop += 100;
 }
 
 
@@ -120,6 +124,8 @@ function Send() {
 
       socket.emit('send', data);
 
+			document.getElementById("chat").scrollTop += 100;
+			
       document.getElementById("message").value = "";
     } else {
       alert("Please write a name");
