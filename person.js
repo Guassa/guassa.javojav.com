@@ -1,134 +1,91 @@
-var socket = io.connect('https://guassa.herokuapp.com/');
-var yourname;
+const socket = io.connect('https://guassa.herokuapp.com/');
+let yourname;
+let settingname = true;
 
-socket.on('receive', receiveMsg);
+socket.on('receive', receiveMessage);
 
-socket.on('here', nowonline);
-
-socket.on('somethinghapenswithaname', vollgeilername);
-
-function nowonline(online) {
-  console.log(online + " persons are online");
+const askforname = () => {
+  document.getElementById("askforname").style.display = 'block';
+  settingname = true
 }
 
-function selname() {
-  if (document.getElementById("name").value == "") {
-    alert("Please write a name");
-  } else {
-    if (yourname == null) {
-      yourname = document.getElementById("name").value;
-      var newname = yourname + " has joined";
-    } else {
-      var oldname = yourname;
-      yourname = document.getElementById("name").value;
-      var newname = oldname + " has changed his name to: " + yourname;
-    }
-    socket.emit('somethinghapenswithaname', newname);
-  }
-}
-
-function vollgeilername(newname) {
-  var messagekasten =  document.createElement("DIV");
-  messagekasten.style.width = "90%";
-  messagekasten.align = "center";
-  messagekasten.style.backgroundColor = "#C3F0FF";
-  messagekasten.style.marginLeft = "5%";
-  messagekasten.style.wordWrap = "break-word";
-  messagekasten.style.borderRadius = "25px";
-  document.getElementById("chat").appendChild(messagekasten);
-
-  var m = document.createElement("P");
-  var text = document.createTextNode(newname);
-  m.style.fontSize = "20px";
-  m.style.color = "black";
-  m.style.margin = "0px";
-  m.appendChild(text);
-
-  messagekasten.appendChild(m);
-  
-  document.getElementById("chat").scrollTop += 100;
-}
-
-function receiveMsg(data) {
-  var messagekasten =  document.createElement("DIV");
-  messagekasten.style.width = "40%";
-  messagekasten.style.backgroundColor = "white";
-  messagekasten.style.wordWrap = "break-word";
-  messagekasten.style.borderRadius = "25px";
-  document.getElementById("chat").appendChild(messagekasten);
-
-  var m = document.createElement("P");
-  var text = document.createTextNode(data.message);
-  m.style.fontSize = "20px";
-  m.style.color = "black";
-  m.style.margin = "0px";
-  m.appendChild(text);
-
-  var n = document.createElement("P");
-  var name = document.createTextNode(data.name);
-  n.style.color = "black";
-  m.style.margin = "0px";
-  n.style.fontSize = "15px";
-  n.appendChild(name);
-
-  m.style.marginLeft = "5%";
-  n.style.marginLeft = "5%";
-  m.style.marginRight = "5%";
-  n.style.marginRight = "5%";
-
-  messagekasten.appendChild(n);
-  messagekasten.appendChild(m);
-  
-  document.getElementById("chat").scrollTop += 100;
-}
-
-
-function Send() {
-  if (document.getElementById("message").value != "") {
-    if (yourname != null) {
-      var data = {
-        name: yourname,
-        message: document.getElementById("message").value
+const setname = newname => {
+  if (newname != "") {
+    if (newname != yourname) {
+      if (yourname == null) socket.emit('namechange', newname + " joined");
+        else socket.emit('namechange', yourname + " has changed his name to: " + newname);
+        yourname = newname;
       }
-      var messagekasten =  document.createElement("DIV");
-      messagekasten.style.width = "40%";
-      messagekasten.style.marginLeft = "60%";
-      messagekasten.style.wordWrap = "break-word";
-      messagekasten.style.backgroundColor = "#9FF781";
-      messagekasten.style.borderRadius = "25px";
-
-      document.getElementById("chat").appendChild(messagekasten);
-
-      var m = document.createElement("P");
-      var text = document.createTextNode(data.message);
-      m.style.fontSize = "20px";
-      m.style.color = "black";
-      m.style.margin = "0px";
-      m.appendChild(text);
-
-      var n = document.createElement("P");
-      var name = document.createTextNode(data.name);
-      n.style.color = "black";
-      m.style.margin = "0px";
-      n.style.width = "25%";
-      n.style.fontSize = "15px";
-      n.appendChild(name);
-
-      m.style.marginLeft = "5%";
-      n.style.marginLeft = "5%";
-      m.style.marginRight = "5%";
-      n.style.marginRight = "5%";
-
-      messagekasten.appendChild(n);
-      messagekasten.appendChild(m);
-
-      socket.emit('send', data);
-
-			document.getElementById("chat").scrollTop += 100;
-			
-      document.getElementById("message").value = "";
-    } else {
-      alert("Please write a name");
+      settingname = false;
+      document.getElementById("name").innerHTML = yourname;
+      document.getElementById("askforname").style.display = 'none';
     }
+}
+
+socket.on('namechanged', message => {
+  const messagebox =  document.createElement("DIV");
+  messagebox.className = "newnamemessage";
+  messagebox.align = "center";
+  document.getElementById("chat").appendChild(messagebox);
+  const messagetext = document.createElement("P");
+  messagebox.appendChild(messagetext.appendChild(document.createTextNode(message)));
+  document.getElementById("chat").scrollTop += 100;
+});
+
+document.addEventListener('keypress', (event) => {
+  if (event.key == "Enter") {
+    if (settingname) setname(document.getElementById('NameInput').value);
+    else sendMessage();
+  }
+});
+
+function receiveMessage(data) {
+  const messagebox =  document.createElement("DIV");
+  messagebox.className = "receivedmessage";
+  document.getElementById("chat").appendChild(messagebox);
+
+  const messagetext = document.createElement("P");
+  messagetext.className = "messagetext";
+  messagetext.appendChild(document.createTextNode(data.message));
+
+  const name = document.createElement("P");
+  name.className = "messagename";
+  name.appendChild(document.createTextNode(data.name));
+
+  messagebox.appendChild(name);
+  messagebox.appendChild(messagetext);
+  document.getElementById("chat").scrollTop += 100;
+}
+
+const imleaving = () => {
+  if (yourname != null) socket.emit('namechange', yourname + " left");
+}
+
+function sendMessage() {
+  if (document.getElementById("message").value != "" && yourname != null) {
+    const data = {
+      name: yourname,
+      message: document.getElementById("message").value
+    }
+    const messagebox =  document.createElement("DIV");
+    messagebox.className = "receivedmessage";
+    messagebox.style.backgroundColor = "#9FF781";
+    messagebox.style.marginLeft = "60%";
+    document.getElementById("chat").appendChild(messagebox);
+
+    const messagetext = document.createElement("P");
+    messagetext.className = "messagetext";
+    messagetext.appendChild(document.createTextNode(data.message));
+
+    const name = document.createElement("P");
+    name.className = "messagename";
+    name.appendChild(document.createTextNode(data.name));
+
+    messagebox.appendChild(name);
+    messagebox.appendChild(messagetext);
+    socket.emit('send', data);
+
+		document.getElementById("chat").scrollTop += 100;
+    document.getElementById("message").value = "";
   }
 }

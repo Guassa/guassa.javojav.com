@@ -1,58 +1,114 @@
 #chat {
-  width: 60%;
+  width: 60vw;
   height:80vh;
-  margin-right:auto;
-  margin-left:auto;
+  margin:auto;
   background-color: gray;
-  overflow: scroll;
+  overflow: auto;
   font-family: 'Rajdhani', sans-serif;
 }
 
-.writeandsend {
+.message {
+  margin-top: .5%;
   position:fixed;
-  width: 60%;
+  width: 60vw;
   height:5vh;
   left:20%;
-  font-size: 15px;
-  float: left;
   font-family: 'Rajdhani', sans-serif;
 }
 
-#message {
-  width:79%;
-  font-size: 15px;
-  height:5vh;
-  float: left;
+.message input {
   font-family: 'Rajdhani', sans-serif;
+
+  width: 69%;
+  height: 100%;
+  left:0;
+  font-size: 2vw;
+  margin:0px;
 }
 
-#send {
-  width:17%;
-  height:5vh;
-  float: left;
-  font-size: 15px;
+.message button {
   font-family: 'Rajdhani', sans-serif;
+
+  width: 29%;
+  height: 100%;
+  font-size: 2vw;
+  margin:0px;
 }
 
-.givemeaname {
+#yourname {
+  font-family: 'Rajdhani', sans-serif;
+  color:white;
+  word-wrap: break-word;
   position: absolute;
-  width:18%;
-  top:100px;
-  font-size: 15px;
+  width:18vw;
+  top:15%;
+  font-size: 2vw;
+}
+
+#askforname {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color:lightGray;
+  opacity: 0.7;
+  font-size: 2vw;
   font-family: 'Rajdhani', sans-serif;
 }
 
-#name {
-  width: 100%;
-  font-size: 15px;
-  font-family: 'Rajdhani', sans-serif;
+#askforname div {
+  position: absolute;
+  width:35%;
+  height:15vw;
+  border:solid 1px lightgray;
+  border-radius: 5px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
 }
 
-#selectname {
-  width: 100%;
-  margin-right:auto;
-  margin-left:auto;
-  font-size: 15px;
+#askforname input, button {
   font-family: 'Rajdhani', sans-serif;
+  width: 97%;
+  height: 20%;
+  margin: 1%;
+  font-size: 1.5vw;
 }
+
+.newnamemessage {
+   width : 90%;
+   background-color: #C3F0FF;
+   margin: 0px auto 0px;
+   border-radius : 25px;
+   font-size: 2vw;
+}
+
+.newnamemessage p {
+  word-wrap: break-word;
+  margin: 0px;
+  color: black;
+}
+
+.receivedmessage {
+  width: 40%;
+  background-color: white;
+  word-wrap: break-word;
+  border-radius: 25px;
+  margin: 5% 0%;
+}
+
+.messagename {
+  font-size: 1.5vw;
+  color: black;
+  margin: 10px 5%;
+}
+
+.messagetext {
+  font-size: 2vw;
+  color: black;
+  margin: 5px 5%;
+}
+
 /* ©Javi */
