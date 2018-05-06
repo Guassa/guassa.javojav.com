@@ -54,7 +54,7 @@ function receiveMessage(data) {
 
   messagebox.appendChild(name);
   messagebox.appendChild(messagetext);
-  document.getElementById("chat").scrollTop += 100;
+  document.getElementById("chat").scrollTop += messagebox.offsetHeight + window.innerHeight * 0.1;
 }
 
 const imleaving = () => {
@@ -85,7 +85,7 @@ function sendMessage() {
     messagebox.appendChild(messagetext);
     socket.emit('send', data);
 
-		document.getElementById("chat").scrollTop += 100;
+		document.getElementById("chat").scrollTop += messagebox.offsetHeight + window.innerHeight * 0.1;
     document.getElementById("message").value = "";
   }
 }
